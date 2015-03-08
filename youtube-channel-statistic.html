@@ -18,7 +18,22 @@
 <script src="../numeral/min/numeral.min.js"></script>
 <script src="../moment/min/moment.min.js"></script>
 
+<!--
+Overview of a YouTube Channel.
 
+This element provides a simple overview of basic, publicly available, statistics of a YouTube Channel.
+
+##### Example
+
+    <youtube-channel-statistic apiKey="AIzaSyDq6ojHsOAqd8lCuYIWGeRMtOXvfLNEEh0"
+                               channelId="UC_x5XG1OV2P6uZZ5FSM9Ttw">
+    </youtube-channel-statistic>
+
+@element youtube-channel-statistic
+@blurb Overview of a YouTube Channel.
+@status alpha
+@homepage http://akash1810.github.io/youtube-channel-statistic
+-->
 <polymer-element name="youtube-channel-statistic" attributes="channelId apiKey">
   <template>
     <link rel="stylesheet" href="styles/youtube-channel-statistic.css">
@@ -76,9 +91,30 @@
 
   <script>
     Polymer("youtube-channel-statistic", {
+      /**
+       * The `channelId` attribute sets the YouTube Channel ID to fetch data for.
+       *
+       * @attribute channelId
+       * @type string
+       * @default 'UC_x5XG1OV2P6uZZ5FSM9Ttw'
+       */
       channelId: "UC_x5XG1OV2P6uZZ5FSM9Ttw",
+
+      /**
+       * The `apiKey` attribute sets the API key to use in the request to the YouTube API.
+       * See https://developers.google.com/youtube/v3/getting-started#before-you-start for further information.
+       *
+       * @attribute apiKey
+       * @type string
+       * @default ''
+       */
       apiKey: "",
 
+      /**
+       * `created` is a lifecycle callback.
+       *
+       * @method created
+       */
       created: function () {
         this.statistics = [];
 
@@ -90,10 +126,23 @@
         };
       },
 
+      /**
+       * `openYouTube` performs a window.open to the YouTube Channel page.
+       *
+       * @method openYouTube
+       */
       openYouTube: function () {
         window.open("//www.youtube.com/channel/" + this.channelId);
       },
 
+      /**
+       * The `apiStatToHtml` method converts a statistic from a YouTube API response.
+       *
+       * @method apiStatToHtml
+       * @param {String} key The statistic key.
+       * @param {Number} value The statistic value.
+       * @return {Object} Returns an object of a representation of the statistic that the template can consume.
+       */
       apiStatToHtml: function (key, value) {
         var name = key.replace('Count', 's');
         var htmlStatName = name.charAt(0).toUpperCase() + name.slice(1);
@@ -107,6 +156,13 @@
         };
       },
 
+      /**
+       * The `getStatistics` method converts statistics from a YouTube API response.
+       *
+       * @method getStatistics
+       * @param {String} apiResponse The statistics object from the YouTube API response.
+       * @return {Array} Returns an array of template friendly statistic objects.
+       */
       getStatistics: function (apiResponse) {
         var statistics = [];
 
@@ -119,6 +175,12 @@
         return statistics;
       },
 
+      /**
+       * The `handleYouTubeApiResponse` method parses a successful response from the YouTube API and sets properties.
+       *
+       * @method handleYouTubeApiResponse
+       * @param {String} e The successful object from a call to the YouTube API.
+       */
       handleYouTubeApiResponse: function (e) {
         var response = e.detail.response;
 
@@ -133,6 +195,12 @@
         this.statistics = this.getStatistics(response.items[0].statistics);
       },
 
+      /**
+       * The `handleYouTubeApiError` method handles an erroneous response from the YouTube API.
+       *
+       * @method handleYouTubeApiError
+       * @param {String} e The successful object from a call to the YouTube API.
+       */
       handleYouTubeApiError: function (e) {
         console.log("=== ERROR ===");
         console.log(e);
