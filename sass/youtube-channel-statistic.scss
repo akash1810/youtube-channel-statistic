@@ -5,10 +5,7 @@
 :host {
   display: block;
   font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
-}
-
-:host /deep/ #icon {
-  margin: 0 4px 0 4px;
+  font-weight: 300;
 }
 
 #outer-shadow, #wrapper {
@@ -21,9 +18,14 @@
 
 #top {
   height: $topHeight;
-  line-height: $topHeight;
   margin-bottom: $padding * 2;
   background: $colorTop;
+
+  span {
+    padding-left: $padding;
+    color: $colorTitle;
+    display: inline-block;
+  }
 }
 
 #thumbnail {
@@ -42,14 +44,23 @@
 }
 
 #channelTitle {
-  padding-left: $padding;
-  color: $colorTitle;
+  font-size: 30px;
+  line-height: $topHeight;
+}
+
+#joinDate {
+  position: absolute;
+  bottom: $padding;
+  font-size: 12px;
 }
 
 #bottom {
+  height: 40px;
+}
 
-//  height: 100px;
-//  background: green;
+#openYouTube {
+  float: right;
+  background-color: darken($colorTop, 5%);
 }
 
 #description {

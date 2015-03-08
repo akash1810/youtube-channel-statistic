@@ -5,6 +5,7 @@
 <link rel="import" href="../core-item/core-item.html">
 <link rel="import" href="../paper-shadow/paper-shadow.html">
 <link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-fab/paper-fab.html">
 
 <link rel="import" href="../core-tooltip/core-tooltip.html">
 <link rel="import" href="../core-icon/core-icon.html">
@@ -38,18 +39,20 @@
               </paper-shadow>
             </div>
 
-            <span id="channelTitle">
-              {{channelTitle}}
-              <!--<h4>Joined: {{joinDate}}</h4>-->
+            <span>
+              <div id="channelTitle">{{channelTitle}}</div>
+              <div id="joinDate">since {{joinDate}}</div>
             </span>
 
           </div>
         </paper-shadow>
 
+        <div id="middle" class="content">
+          <div id="description">{{channelDescription}}</div>
+        </div>
+
         <div id="bottom" class="content">
-          <div id="description">
-            {{channelDescription}}
-          </div>
+          <paper-fab mini id="openYouTube" icon="open-in-new" on-click="{{openYouTube}}"></paper-fab>
         </div>
       </div>
     </paper-shadow>
@@ -60,14 +63,22 @@
       channelId: "UC_x5XG1OV2P6uZZ5FSM9Ttw",
       apiKey: "",
 
-      _iconMap: {
-        viewCount: "av:play-circle-fill",
-        commentCount: "communication:comment",
-        subscriberCount: "social:people",
-        videoCount: "av:videocam"
+      created: function () {
+        this.statistics = [];
+
+        this.iconMap = {
+          viewCount: "av:play-circle-fill",
+            commentCount: "communication:comment",
+            subscriberCount: "social:people",
+            videoCount: "av:videocam"
+        };
       },
 
-      _apiStatToHtml: function (key, value) {
+      openYouTube: function () {
+        window.open("//www.youtube.com/channel/" + this.channelId);
+      },
+
+      apiStatToHtml: function (key, value) {
         var name = key.replace('Count', 's');
         var htmlStatName = name.charAt(0).toUpperCase() + name.slice(1);
         var htmlStatValue = numeral(value).format("0a");
@@ -76,8 +87,20 @@
           id: key,
           name: htmlStatName,
           value: htmlStatValue,
-          icon: this._iconMap[key]
+          icon: this.iconMap[key]
         };
+      },
+
+      getStatistics: function (apiResponse) {
+        var statistics = [];
+
+        Object.keys(apiResponse).forEach(function (stat) {
+          if (stat !== 'hiddenSubscriberCount') {
+            statistics.push(this.apiStatToHtml(stat, apiResponse[stat]));
+          }
+        }.bind(this));
+
+        return statistics;
       },
 
       handleYouTubeApiResponse: function (e) {
@@ -88,21 +111,12 @@
         var apiSnippet = response.items[0].snippet;
 
         this.channelTitle = apiSnippet.title;
-        this.joinDate = moment(apiSnippet.publishedAt).format("YYYY-MM-DD");
+        this.joinDate = moment(apiSnippet.publishedAt).format("DD MMMM YYYY");
         this.thumbnail = apiSnippet.thumbnails.default.url;
-
         this.channelDescription = apiSnippet.description;
-
-        var apiStatistics = response.items[0].statistics;
-
-        this.statistics = [];
-
-        Object.keys(apiStatistics).forEach(function (stat) {
-          if (stat !== 'hiddenSubscriberCount') {
-            this.statistics.push(this._apiStatToHtml(stat, apiStatistics[stat]));
-          }
-        }.bind(this));
+        this.statistics = this.getStatistics(response.items[0].statistics);
       },
+
       handleYouTubeApiError: function (e) {
         console.log("=== ERROR ===");
         console.log(e);
