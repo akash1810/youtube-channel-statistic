@@ -1,0 +1,212 @@
+<link rel="import" href="../font-roboto/roboto.html">
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-ajax/core-ajax.html">
+<link rel="import" href="../core-image/core-image.html">
+<link rel="import" href="../core-item/core-item.html">
+<link rel="import" href="../paper-shadow/paper-shadow.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-fab/paper-fab.html">
+
+<link rel="import" href="../core-tooltip/core-tooltip.html">
+<link rel="import" href="../core-icon/core-icon.html">
+<link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../core-icons/av-icons.html">
+<link rel="import" href="../core-icons/communication-icons.html">
+<link rel="import" href="../core-icons/social-icons.html">
+<link rel="import" href="../core-media-query/core-media-query.html">
+
+<script src="../numeral/min/numeral.min.js"></script>
+<script src="../moment/min/moment.min.js"></script>
+
+<!--
+Overview of a YouTube Channel.
+
+This element provides a simple overview of basic, publicly available, statistics of a YouTube Channel.
+
+##### Example
+
+    <youtube-channel-statistic apiKey="AIzaSyDq6ojHsOAqd8lCuYIWGeRMtOXvfLNEEh0"
+                               channelId="UC_x5XG1OV2P6uZZ5FSM9Ttw">
+    </youtube-channel-statistic>
+
+@element youtube-channel-statistic
+@blurb Overview of a YouTube Channel.
+@status alpha
+@homepage http://akash1810.github.io/youtube-channel-statistic
+-->
+<polymer-element name="youtube-channel-statistic" attributes="channelId apiKey">
+  <template>
+    <link rel="stylesheet" href="styles/youtube-channel-statistic.css">
+    <core-media-query query="max-width: 640px" queryMatches="{{phoneScreen}}"></core-media-query>
+    <paper-shadow z="1" id="outer-shadow">
+      <div id="wrapper">
+        <core-ajax auto
+                   url="https://www.googleapis.com/youtube/v3/channels"
+                   params='{"part": "statistics,snippet", "id": "{{channelId}}", "key": "{{apiKey}}"}'
+                   handleAs="json"
+                   on-core-response="{{handleYouTubeApiResponse}}"
+                   on-core-error="{{handleYouTubeApiError}}">
+        </core-ajax>
+
+        <paper-shadow id="top-shadow" z="2">
+          <div id="top" class="content">
+            <div id="thumbnail">
+              <paper-shadow z="1">
+                <core-image src="{{thumbnail}}"></core-image>
+              </paper-shadow>
+            </div>
+
+            <span>
+              <div id="channelTitle">{{channelTitle}}</div>
+              <div id="joinDate">since {{joinDate}}</div>
+            </span>
+          </div>
+        </paper-shadow>
+
+        <div id="bottom" class="content">
+          <div id="channelId">
+            <core-icon icon="account-circle" class="phone-{{phoneScreen}}"></core-icon>
+            {{channelId}}
+          </div>
+
+          <template if="{{!phoneScreen}}">
+            <div id="description">{{channelDescription}}</div>
+          </template>
+
+          <div layout vertical?="{{phoneScreen}}" horizontal?="{{!phoneScreen}}">
+            <template repeat="{{stat in statistics}}">
+              <div auto-vertical flex>
+                <core-icon icon="{{stat.icon}}" class="phone-{{phoneScreen}}"></core-icon>
+                <template if="{{phoneScreen}}">{{stat.value}} {{stat.name}}</template>
+                <template if="{{!phoneScreen}}">{{stat.shortValue}}</template>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <paper-fab mini id="openYouTube" icon="open-in-new" on-click="{{openYouTube}}"></paper-fab>
+      </div>
+    </paper-shadow>
+  </template>
+
+  <script>
+    Polymer("youtube-channel-statistic", {
+      /**
+       * The `channelId` attribute sets the YouTube Channel ID to fetch data for.
+       *
+       * @attribute channelId
+       * @type string
+       * @default 'UC_x5XG1OV2P6uZZ5FSM9Ttw'
+       */
+      channelId: "UC_x5XG1OV2P6uZZ5FSM9Ttw",
+
+      /**
+       * The `apiKey` attribute sets the API key to use in the request to the YouTube API.
+       * See https://developers.google.com/youtube/v3/getting-started#before-you-start for further information.
+       *
+       * @attribute apiKey
+       * @type string
+       * @default ''
+       */
+      apiKey: "",
+
+      /**
+       * `created` is a lifecycle callback.
+       *
+       * @method created
+       */
+      created: function () {
+        this.statistics = [];
+
+        this.iconMap = {
+          viewCount: "visibility",
+          commentCount: "communication:comment",
+          subscriberCount: "social:people",
+          videoCount: "av:movie"
+        };
+      },
+
+      /**
+       * `openYouTube` performs a window.open to the YouTube Channel page.
+       *
+       * @method openYouTube
+       */
+      openYouTube: function () {
+        window.open("//www.youtube.com/channel/" + this.channelId);
+      },
+
+      /**
+       * The `apiStatToHtml` method converts a statistic from a YouTube API response.
+       *
+       * @method apiStatToHtml
+       * @param {String} key The statistic key.
+       * @param {Number} value The statistic value.
+       * @return {Object} Returns an object of a representation of the statistic that the template can consume.
+       */
+      apiStatToHtml: function (key, value) {
+        var name = key.replace('Count', 's');
+        var htmlStatName = name.charAt(0).toUpperCase() + name.slice(1);
+
+        return {
+          id: key,
+          name: htmlStatName,
+          value: numeral(value).format("0,0"),
+          shortValue: numeral(value).format("0a"),
+          icon: this.iconMap[key]
+        };
+      },
+
+      /**
+       * The `getStatistics` method converts statistics from a YouTube API response.
+       *
+       * @method getStatistics
+       * @param {String} apiResponse The statistics object from the YouTube API response.
+       * @return {Array} Returns an array of template friendly statistic objects.
+       */
+      getStatistics: function (apiResponse) {
+        var statistics = [];
+
+        Object.keys(apiResponse).forEach(function (stat) {
+          if (stat !== 'hiddenSubscriberCount') {
+            statistics.push(this.apiStatToHtml(stat, apiResponse[stat]));
+          }
+        }.bind(this));
+
+        return statistics;
+      },
+
+      /**
+       * The `handleYouTubeApiResponse` method parses a successful response from the YouTube API and sets properties.
+       *
+       * @method handleYouTubeApiResponse
+       * @param {String} e The successful object from a call to the YouTube API.
+       */
+      handleYouTubeApiResponse: function (e) {
+        var response = e.detail.response;
+
+        if (response.items.length === 0) { return ; }
+
+        var apiSnippet = response.items[0].snippet;
+
+        this.channelTitle = apiSnippet.title;
+        this.joinDate = moment(apiSnippet.publishedAt).format("DD MMMM YYYY");
+        this.thumbnail = apiSnippet.thumbnails.default.url;
+        this.channelDescription = apiSnippet.description;
+        this.statistics = this.getStatistics(response.items[0].statistics);
+      },
+
+      /**
+       * The `handleYouTubeApiError` method handles an erroneous response from the YouTube API.
+       *
+       * @method handleYouTubeApiError
+       * @param {String} e The successful object from a call to the YouTube API.
+       */
+      handleYouTubeApiError: function (e) {
+        console.log("=== ERROR ===");
+        console.log(e);
+      }
+    });
+
+  </script>
+
+</polymer-element>

@@ -1,0 +1,153 @@
+/* line 5, ../../../../.rvm/gems/ruby-2.1.1@youtube-channel-statistic/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* line 22, ../../../../.rvm/gems/ruby-2.1.1@youtube-channel-statistic/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+html {
+  line-height: 1;
+}
+
+/* line 24, ../../../../.rvm/gems/ruby-2.1.1@youtube-channel-statistic/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* line 26, ../../../../.rvm/gems/ruby-2.1.1@youtube-channel-statistic/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 28, ../../../../.rvm/gems/ruby-2.1.1@youtube-channel-statistic/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+/* line 30, ../../../../.rvm/gems/ruby-2.1.1@youtube-channel-statistic/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+q, blockquote {
+  quotes: none;
+}
+/* line 103, ../../../../.rvm/gems/ruby-2.1.1@youtube-channel-statistic/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+/* line 32, ../../../../.rvm/gems/ruby-2.1.1@youtube-channel-statistic/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+a img {
+  border: none;
+}
+
+/* line 116, ../../../../.rvm/gems/ruby-2.1.1@youtube-channel-statistic/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+/* line 5, ../sass/youtube-channel-statistic.scss */
+:host {
+  display: block;
+  font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
+  font-weight: 300;
+  min-width: 400px;
+}
+
+/* line 12, ../sass/youtube-channel-statistic.scss */
+#outer-shadow, #wrapper {
+  height: 100%;
+}
+
+/* line 16, ../sass/youtube-channel-statistic.scss */
+.content {
+  padding: 20px 20px 10px 20px;
+}
+
+/* line 20, ../sass/youtube-channel-statistic.scss */
+#top {
+  height: 60px;
+  background-color: #008BC2;
+}
+/* line 24, ../sass/youtube-channel-statistic.scss */
+#top span {
+  padding-left: 10px;
+  color: white;
+  display: inline-block;
+}
+
+/* line 31, ../sass/youtube-channel-statistic.scss */
+#thumbnail {
+  float: left;
+}
+/* line 34, ../sass/youtube-channel-statistic.scss */
+#thumbnail * {
+  border-radius: 60px;
+  width: 60px;
+  height: 60px;
+}
+/* line 40, ../sass/youtube-channel-statistic.scss */
+#thumbnail core-image::shadow img {
+  width: 60px;
+  height: 60px;
+}
+
+/* line 46, ../sass/youtube-channel-statistic.scss */
+#channelTitle {
+  font-size: 30px;
+  line-height: 60px;
+}
+
+/* line 51, ../sass/youtube-channel-statistic.scss */
+#joinDate {
+  position: absolute;
+  bottom: 10px;
+  font-size: 12px;
+}
+
+/* line 57, ../sass/youtube-channel-statistic.scss */
+#openYouTube {
+  background-color: #0079a9;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+/* line 64, ../sass/youtube-channel-statistic.scss */
+#description {
+  word-wrap: break-word;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* line 70, ../sass/youtube-channel-statistic.scss */
+core-icon {
+  color: #009ddc;
+}
+/* line 73, ../sass/youtube-channel-statistic.scss */
+core-icon.phone-true {
+  width: 40px;
+  height: 40px;
+}
+/* line 78, ../sass/youtube-channel-statistic.scss */
+core-icon.phone-false {
+  width: 20px;
+  height: 20px;
+}

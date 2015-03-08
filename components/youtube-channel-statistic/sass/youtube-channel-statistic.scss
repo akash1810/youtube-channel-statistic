@@ -1,0 +1,82 @@
+@import "compass/reset";
+
+@import "vars";
+
+:host {
+  display: block;
+  font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
+  font-weight: 300;
+  min-width: 400px;
+}
+
+#outer-shadow, #wrapper {
+  height: 100%;
+}
+
+.content {
+  padding: $doublePadding $doublePadding $padding $doublePadding;
+}
+
+#top {
+  height: $topHeight;
+  background-color: $colorTop;
+
+  span {
+    padding-left: $padding;
+    color: $colorTitle;
+    display: inline-block;
+  }
+}
+
+#thumbnail {
+  float: left;
+
+  * {
+    border-radius: $thumbnailSize;
+    width: $thumbnailSize;
+    height: $thumbnailSize;
+  }
+
+  core-image::shadow img {
+    width: $thumbnailSize;
+    height: $thumbnailSize;
+  }
+}
+
+#channelTitle {
+  font-size: 30px;
+  line-height: $topHeight;
+}
+
+#joinDate {
+  position: absolute;
+  bottom: $padding;
+  font-size: 12px;
+}
+
+#openYouTube {
+  background-color: darken($colorTop, 5%);
+  position: absolute;
+  bottom: $padding;
+  right: $padding;
+}
+
+#description {
+  word-wrap: break-word;
+  margin-top: $padding;
+  margin-bottom: $padding;
+}
+
+core-icon {
+  color: lighten($colorTop, 5%);
+
+  &.phone-true {
+    width: $iconSize;
+    height: $iconSize;
+  }
+
+  &.phone-false {
+    width: $iconSize / 2;
+    height: $iconSize / 2;
+  }
+}
