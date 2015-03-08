@@ -13,6 +13,7 @@
 <link rel="import" href="../core-icons/av-icons.html">
 <link rel="import" href="../core-icons/communication-icons.html">
 <link rel="import" href="../core-icons/social-icons.html">
+<link rel="import" href="../core-media-query/core-media-query.html">
 
 <script src="../numeral/min/numeral.min.js"></script>
 <script src="../moment/min/moment.min.js"></script>
@@ -21,6 +22,7 @@
 <polymer-element name="youtube-channel-statistic" attributes="channelId apiKey">
   <template>
     <link rel="stylesheet" href="styles/youtube-channel-statistic.css">
+    <core-media-query query="max-width: 640px" queryMatches="{{phoneScreen}}"></core-media-query>
     <paper-shadow z="1" id="outer-shadow">
       <div id="wrapper">
         <core-ajax auto
@@ -43,17 +45,31 @@
               <div id="channelTitle">{{channelTitle}}</div>
               <div id="joinDate">since {{joinDate}}</div>
             </span>
-
           </div>
         </paper-shadow>
 
-        <div id="middle" class="content">
-          <div id="description">{{channelDescription}}</div>
+        <div id="bottom" class="content">
+          <div id="channelId">
+            <core-icon icon="account-circle" class="phone-{{phoneScreen}}"></core-icon>
+            {{channelId}}
+          </div>
+
+          <template if="{{!phoneScreen}}">
+            <div id="description">{{channelDescription}}</div>
+          </template>
+
+          <div layout vertical?="{{phoneScreen}}" horizontal?="{{!phoneScreen}}">
+            <template repeat="{{stat in statistics}}">
+              <div auto-vertical flex>
+                <core-icon icon="{{stat.icon}}" class="phone-{{phoneScreen}}"></core-icon>
+                <template if="{{phoneScreen}}">{{stat.value}} {{stat.name}}</template>
+                <template if="{{!phoneScreen}}">{{stat.shortValue}}</template>
+              </div>
+            </template>
+          </div>
         </div>
 
-        <div id="bottom" class="content">
-          <paper-fab mini id="openYouTube" icon="open-in-new" on-click="{{openYouTube}}"></paper-fab>
-        </div>
+        <paper-fab mini id="openYouTube" icon="open-in-new" on-click="{{openYouTube}}"></paper-fab>
       </div>
     </paper-shadow>
   </template>
@@ -67,10 +83,10 @@
         this.statistics = [];
 
         this.iconMap = {
-          viewCount: "av:play-circle-fill",
-            commentCount: "communication:comment",
-            subscriberCount: "social:people",
-            videoCount: "av:videocam"
+          viewCount: "visibility",
+          commentCount: "communication:comment",
+          subscriberCount: "social:people",
+          videoCount: "av:movie"
         };
       },
 
@@ -81,12 +97,12 @@
       apiStatToHtml: function (key, value) {
         var name = key.replace('Count', 's');
         var htmlStatName = name.charAt(0).toUpperCase() + name.slice(1);
-        var htmlStatValue = numeral(value).format("0a");
 
         return {
           id: key,
           name: htmlStatName,
-          value: htmlStatValue,
+          value: numeral(value).format("0,0"),
+          shortValue: numeral(value).format("0a"),
           icon: this.iconMap[key]
         };
       },

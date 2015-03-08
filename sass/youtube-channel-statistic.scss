@@ -6,6 +6,7 @@
   display: block;
   font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
   font-weight: 300;
+  min-width: 400px;
 }
 
 #outer-shadow, #wrapper {
@@ -13,12 +14,11 @@
 }
 
 .content {
-  padding: $padding ($padding * 2) $padding ($padding * 2);
+  padding: $doublePadding $doublePadding $padding $doublePadding;
 }
 
 #top {
   height: $topHeight;
-  margin-bottom: $padding * 2;
   background: $colorTop;
 
   span {
@@ -54,15 +54,29 @@
   font-size: 12px;
 }
 
-#bottom {
-  height: 40px;
-}
-
 #openYouTube {
-  float: right;
   background-color: darken($colorTop, 5%);
+  position: absolute;
+  bottom: $padding;
+  right: $padding;
 }
 
 #description {
   word-wrap: break-word;
+  margin-top: $padding;
+  margin-bottom: $padding;
+}
+
+core-icon {
+  color: lighten($colorTop, 5%);
+
+  &.phone-true {
+    width: $iconSize;
+    height: $iconSize;
+  }
+
+  &.phone-false {
+    width: $iconSize / 2;
+    height: $iconSize / 2;
+  }
 }
