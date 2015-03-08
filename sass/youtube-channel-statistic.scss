@@ -1,0 +1,57 @@
+@import "compass/reset";
+
+@import "vars";
+
+:host {
+  display: block;
+  font-family: RobotoDraft, 'Helvetica Neue', Helvetica, Arial;
+}
+
+:host /deep/ #icon {
+  margin: 0 4px 0 4px;
+}
+
+#outer-shadow, #wrapper {
+  height: 100%;
+}
+
+.content {
+  padding: $padding ($padding * 2) $padding ($padding * 2);
+}
+
+#top {
+  height: $topHeight;
+  line-height: $topHeight;
+  margin-bottom: $padding * 2;
+  background: $colorTop;
+}
+
+#thumbnail {
+  float: left;
+
+  * {
+    border-radius: $thumbnailSize;
+    width: $thumbnailSize;
+    height: $thumbnailSize;
+  }
+
+  core-image::shadow img {
+    width: $thumbnailSize;
+    height: $thumbnailSize;
+  }
+}
+
+#channelTitle {
+  padding-left: $padding;
+  color: $colorTitle;
+}
+
+#bottom {
+
+//  height: 100px;
+//  background: green;
+}
+
+#description {
+  word-wrap: break-word;
+}

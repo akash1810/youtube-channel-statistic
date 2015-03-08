@@ -1,3 +1,4 @@
+<link rel="import" href="../font-roboto/roboto.html">
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../core-ajax/core-ajax.html">
 <link rel="import" href="../core-image/core-image.html">
@@ -16,14 +17,14 @@
 <script src="../moment/min/moment.min.js"></script>
 
 
-<polymer-element name="youtube-channel-statistic" attributes="channelid apiKey">
+<polymer-element name="youtube-channel-statistic" attributes="channelId apiKey">
   <template>
-    <link rel="stylesheet" href="youtube-channel-statistic.css">
+    <link rel="stylesheet" href="styles/youtube-channel-statistic.css">
     <paper-shadow z="1" id="outer-shadow">
       <div id="wrapper">
         <core-ajax auto
                    url="https://www.googleapis.com/youtube/v3/channels"
-                   params='{"part": "statistics,snippet", "id": "{{channelid}}", "key": "{{apiKey}}"}'
+                   params='{"part": "statistics,snippet", "id": "{{channelId}}", "key": "{{apiKey}}"}'
                    handleAs="json"
                    on-core-response="{{handleYouTubeApiResponse}}"
                    on-core-error="{{handleYouTubeApiError}}">
@@ -46,7 +47,9 @@
         </paper-shadow>
 
         <div id="bottom" class="content">
-
+          <div id="description">
+            {{channelDescription}}
+          </div>
         </div>
       </div>
     </paper-shadow>
@@ -54,7 +57,7 @@
 
   <script>
     Polymer("youtube-channel-statistic", {
-      channelid: "UC_x5XG1OV2P6uZZ5FSM9Ttw",
+      channelId: "UC_x5XG1OV2P6uZZ5FSM9Ttw",
       apiKey: "",
 
       _iconMap: {
