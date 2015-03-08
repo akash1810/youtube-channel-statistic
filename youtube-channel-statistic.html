@@ -1,0 +1,111 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-ajax/core-ajax.html">
+<link rel="import" href="../core-image/core-image.html">
+<link rel="import" href="../core-item/core-item.html">
+<link rel="import" href="../paper-shadow/paper-shadow.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+<link rel="import" href="../core-tooltip/core-tooltip.html">
+<link rel="import" href="../core-icon/core-icon.html">
+<link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../core-icons/av-icons.html">
+<link rel="import" href="../core-icons/communication-icons.html">
+<link rel="import" href="../core-icons/social-icons.html">
+
+<script src="../numeral/min/numeral.min.js"></script>
+<script src="../moment/min/moment.min.js"></script>
+
+
+<polymer-element name="youtube-channel-statistic" attributes="channelid apiKey">
+  <template>
+    <link rel="stylesheet" href="youtube-channel-statistic.css">
+    <paper-shadow z="1" id="outer-shadow">
+      <div id="wrapper">
+        <core-ajax auto
+                   url="https://www.googleapis.com/youtube/v3/channels"
+                   params='{"part": "statistics,snippet", "id": "{{channelid}}", "key": "{{apiKey}}"}'
+                   handleAs="json"
+                   on-core-response="{{handleYouTubeApiResponse}}"
+                   on-core-error="{{handleYouTubeApiError}}">
+        </core-ajax>
+
+        <paper-shadow id="top-shadow" z="2">
+          <div id="top" class="content">
+            <div id="thumbnail">
+              <paper-shadow z="1">
+                <core-image src="{{thumbnail}}"></core-image>
+              </paper-shadow>
+            </div>
+
+            <span id="channelTitle">
+              {{channelTitle}}
+              <!--<h4>Joined: {{joinDate}}</h4>-->
+            </span>
+
+          </div>
+        </paper-shadow>
+
+        <div id="bottom" class="content">
+
+        </div>
+      </div>
+    </paper-shadow>
+  </template>
+
+  <script>
+    Polymer("youtube-channel-statistic", {
+      channelid: "UC_x5XG1OV2P6uZZ5FSM9Ttw",
+      apiKey: "",
+
+      _iconMap: {
+        viewCount: "av:play-circle-fill",
+        commentCount: "communication:comment",
+        subscriberCount: "social:people",
+        videoCount: "av:videocam"
+      },
+
+      _apiStatToHtml: function (key, value) {
+        var name = key.replace('Count', 's');
+        var htmlStatName = name.charAt(0).toUpperCase() + name.slice(1);
+        var htmlStatValue = numeral(value).format("0a");
+
+        return {
+          id: key,
+          name: htmlStatName,
+          value: htmlStatValue,
+          icon: this._iconMap[key]
+        };
+      },
+
+      handleYouTubeApiResponse: function (e) {
+        var response = e.detail.response;
+
+        if (response.items.length === 0) { return ; }
+
+        var apiSnippet = response.items[0].snippet;
+
+        this.channelTitle = apiSnippet.title;
+        this.joinDate = moment(apiSnippet.publishedAt).format("YYYY-MM-DD");
+        this.thumbnail = apiSnippet.thumbnails.default.url;
+
+        this.channelDescription = apiSnippet.description;
+
+        var apiStatistics = response.items[0].statistics;
+
+        this.statistics = [];
+
+        Object.keys(apiStatistics).forEach(function (stat) {
+          if (stat !== 'hiddenSubscriberCount') {
+            this.statistics.push(this._apiStatToHtml(stat, apiStatistics[stat]));
+          }
+        }.bind(this));
+      },
+      handleYouTubeApiError: function (e) {
+        console.log("=== ERROR ===");
+        console.log(e);
+      }
+    });
+
+  </script>
+
+</polymer-element>
